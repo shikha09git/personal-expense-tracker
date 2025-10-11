@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .summary {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+
+    .summary p {
+        background: #ffffff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .actions {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .actions a {
+        text-decoration: none;
+        padding: 10px 15px;
+        margin: 0 10px;
+        border-radius: 5px;
+        background: #3498db;
+        color: white;
+        transition: 0.3s;
+    }
+
+    .actions a:hover {
+        background: #2980b9;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background: #2c3e50;
+        color: white;
+    }
+
+    tr:hover {
+        background: #f1f1f1;
+    }
+
+    .empty-row {
+        text-align: center;
+        color: #888;
+        font-style: italic;
+    }
+</style>
+
+<h1>My Expenses</h1>
+
+<div class="summary">
+    <p>Total Expense: ₹{{ total }}</p>
+    <p>Total This Month: ₹{{ monthly_total }}</p>
+</div>
+
+<div class="actions">
+    <a href="{% url 'add_expense' %}">➕ Add Expense</a>
+    <a href="{% url 'export_csv' %}">⬇️ Download CSV</a>
+</div>
+
+<table>
+    <tr>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Date</th>
+    </tr>
+    {% for exp in expenses %}
+    <tr>
+        <td>{{ exp.category }}</td>
+        <td>₹{{ exp.amount }}</td>
+        <td>{{ exp.description }}</td>
+        <td>{{ exp.date }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" class="empty-row">No expenses found.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
+
