@@ -10,64 +10,27 @@ import csv
 from django.http import HttpResponse
 
 
-# Create your views here.
-
-# login_required
 def home(request):
-    # Redirect to login if user is not authenticated
     if not request.user.is_authenticated:
-        return redirect('login')  # Replace 'login' with your login URL name
+        return redirect('login')  
 
-    # Get all expenses for the logged-in user
     expenses = expense.objects.filter(user=request.user).order_by('-date')
 
-    # Calculate total amount spent
+
     total = expenses.aggregate(Sum('amount'))['amount__sum'] or 0
 
-    # Total spent in the current month
+  
     current_month = now().month
     monthly_total = expenses.filter(date__month=current_month).aggregate(Sum('amount'))['amount__sum'] or 0
 
-    # Render the home page with all values
+  
     return render(request, 'expenses/home.html', {
         'expenses': expenses,
         'total': total,
         'monthly_total': monthly_total
     })
 
-# def home(request):
-#     # ORM
-#     expenses= Expense.objects.filter(user=request.user).order_by('-date')
-#     return render(request, 'expenses/home.html', {'expenses':expenses})
 
-
-#      # Calculate total amount spent
-#     total = expenses.aggregate(Sum('amount'))['amount__sum'] or 0
-
-#     # Total spent in current month
-#     current_month = now().month
-#     monthly_total = expenses.filter(date__month=current_month).aggregate(Sum('amount'))['amount__sum'] or 0
-
-#     return render(request, 'expenses/home.html', {
-#         'expenses': expenses,
-#         'total': total,
-#         'monthly_total': monthly_total
-#     })
-#Login  required
-
-# def add_expense(request):
-#     if request.method== 'POST':
-#         form = ExpenseForm(request.POST)
-#         if form.is_valid():
-#             expense = form.save(commit=False)
-#             expense.user = request.user
-
-#             expense.save()
-#             return redirect('home')
-        
-#     else:
-#         form= ExpenseForm()
-#     return render(request,'expenses/add_expense.html' ,{'form':form} )
 
 def add_expense(request):
     if request.method == 'POST':
